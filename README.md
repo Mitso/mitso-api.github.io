@@ -8,6 +8,10 @@
 
 [Express redis integration](https://expressjs.com/en/guide/database-integration.html#redis)
 
+### Web APIs: Fetch
+
+[MDN Web Docs - Using Fetch](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch)
+
 
 
 ### Helpful stackoverflow resources 
