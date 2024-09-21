@@ -36,13 +36,7 @@ app.get('/', async (req, res) => {
 
 
 app.post('/signup', cors(corsOptions), (req, res) => {
-    //API server validation
-    // req.body.full_name
-    // req.body.mobile_number
-    // req.body.email_address
     res.send('The server has received your request.')
-    //connect to a remote database.
-    console.log('req', req.body)
 })
 
 app.listen(PORT, () => {
