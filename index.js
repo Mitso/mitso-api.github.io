@@ -29,7 +29,7 @@ const store = getFirestore()
 app.get('/', async (req, res) => {
     const getData = await getDocs(collection(store, 'home'))
     getData.forEach(item => {
-        console.log('>>', item.id, json.parse(item.data()))
+        console.log('>>', item.id, item.data())
     })
     res.send('Running express.js API')
 })
