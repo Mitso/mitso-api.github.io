@@ -1,7 +1,11 @@
+//EXPRESSJS PACKAGES
 const express = require('express'),
     cors = require('cors'),
     bodyParser = require('body-parser')
+const firebaseApp = require('./firebase')
+const { getFirestore, collection, getDocs } = require('firebase/firestore')
 
+//EXPRESSJS APP INITIALIZATION & API APP CONFIGURATION
 const app = express()
 const PORT = '8080',
     corsOptions = {
@@ -11,28 +15,28 @@ const PORT = '8080',
         optionsSuccessStatus: 204
     }
 
-
 express.json()
 express.urlencoded({extended: true })
 // Use body-parser middleware
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
-
-
 app.options('*', cors(corsOptions)) // enable pre-flight request for POST request
-app.get('/', (req, res) => {
+
+//FIREBASE DB FUNCTIONS
+const store = getFirestore()
+
+//EXPRESSJS ROUTE HANDLERS
+app.get('/', async (req, res) => {
+    const getData = await getDocs(collection(store, 'home'))
+    getData.forEach(item => {
+        console.log('>>', item.id, item.data())
+    })
     res.send('Running express.js API')
 })
 
 
 app.post('/signup', cors(corsOptions), (req, res) => {
-    //API server validation
-    // req.body.full_name
-    // req.body.mobile_number
-    // req.body.email_address
     res.send('The server has received your request.')
-    //connect to a remote database.
-    console.log('req', req.body)
 })
 
 app.listen(PORT, () => {

@@ -20,3 +20,10 @@
 
 ### Other resources
 [Random User API ](https://randomuser.me/api/?results=50&seed=somethingfun)
+
+
+
+### Environment variables 
+
+[https://dotenvx.com/](https://dotenvx.com/)
+[https://github.com/motdotla/dotenv](https://github.com/motdotla/dotenv)
