@@ -2,7 +2,6 @@
 const express = require('express'),
     cors = require('cors'),
     bodyParser = require('body-parser')
-const firebaseApp = require('./firebase')
 const { getFirestore, collection, getDocs } = require('firebase/firestore')
 
 //EXPRESSJS APP INITIALIZATION & API APP CONFIGURATION
