@@ -1,5 +1,3 @@
-const { initializeApp } = require('firebase/app')
-
 const configs = {
   apiKey: process.env.FIREBASE_API_KEY,
   authDomain: process.env.FIREBASE_AUTH_DOMAIN,
@@ -11,6 +9,4 @@ const configs = {
   measurementId: process.env.FIREBASE_MEASUREMENT_ID
 }
 
-const firebaseApp = initializeApp(configs)
-
-exports.modules = firebaseApp
+export default configs
