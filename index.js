@@ -1,10 +1,10 @@
 //EXPRESSJS PACKAGES
-import express from 'express'
-import cors from 'cors'
-import bodyParser from 'body-parser'
-import { initializeApp } from 'firebase/app'
-import configs from './firebase'
-import { getFirestore, collection, getDocs } from 'firebase/firestore'
+const express = require('express')
+const cors = require('cors')
+const bodyParser = require('body-parser')
+const { initializeApp } = require('firebase/app')
+const configs  = require('./firebase')
+const { getFirestore, collection, getDocs } = require('firebase/firestore')
 
 //EXPRESSJS APP INITIALIZATION & API APP CONFIGURATION
 const firebaseApp = initializeApp(configs)
@@ -40,8 +40,6 @@ app.post('/signup', cors(corsOptions), (req, res) => {
     res.send('The server has received your request.')
 })
 
-// app.listen(PORT, () => {
-//     console.log(`Express API server listening on http:localhost:${PORT}`)
-// })
-
-export const viteNodeApp = app
+app.listen(process.env.PORT, () => {
+    console.log(`Express API server listening on http:localhost:${process.env.PORT}`)
+})

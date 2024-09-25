@@ -9,4 +9,4 @@ const configs = {
   measurementId: process.env.FIREBASE_MEASUREMENT_ID
 }
 
-export default configs
+module.exports = configs

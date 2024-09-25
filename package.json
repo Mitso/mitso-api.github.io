@@ -1,14 +1,13 @@
 {
   "name": "mitso-api",
   "version": "1.0.0",
+  "main": "index.js",
   "description": "",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "dotenvx run -- vite",
-    "build": "dotenvx run -- vite build"
+    "dev": "dotenvx run -- node index.js"
   },
   "keywords": [],
-  "main": "index.js",
   "author": "",
   "license": "ISC",
   "dependencies": {
@@ -17,9 +16,5 @@
     "cors": "^2.8.5",
     "express": "^4.19.2",
     "firebase": "^10.13.1"
-  },
-  "devDependencies": {
-    "vite": "^4.5.5",
-    "vite-plugin-node": "^3.1.0"
   }
 }
