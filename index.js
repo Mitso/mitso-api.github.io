@@ -1,45 +1,25 @@
-//EXPRESSJS PACKAGES
-const express = require('express')
-const cors = require('cors')
-const bodyParser = require('body-parser')
-const { initializeApp } = require('firebase/app')
-const configs  = require('./firebase')
-const { getFirestore, collection, getDocs } = require('firebase/firestore')
+const express = require('express'),
+    cors = require('cors');
+//bodyParser = require('body-parser');
 
-//EXPRESSJS APP INITIALIZATION & API APP CONFIGURATION
-const firebaseApp = initializeApp(configs)
-const app = express()
-const corsOptions = {
-        origin: 'http://localhost:5173',
-        methods: 'HEAD,PUT,PATCH,POST,DELETE',
-        preflightContinue: false,
-        optionsSuccessStatus: 204
-    }
+const app = express();
 
-express.json()
-express.urlencoded({extended: true })
-// Use body-parser middleware
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: true }))
-app.options('*', cors(corsOptions)) // enable pre-flight request for POST request
+express.json(); 
+express.urlencoded({extended: true });
 
-//FIREBASE DB FUNCTIONS
-const store = getFirestore()
+// app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({ extended: true }))
+
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 
 //EXPRESSJS ROUTE HANDLERS
 app.get('/', async (req, res) => {
-    const getData = await getDocs(collection(store, 'home'))
-    getData.forEach(item => {
-        console.log('>>', item.id, item.data())
-    })
-    res.send('Running express.js API')
-})
+    res.json({
+        hello: "world"
+    });
+});
 
-
-app.post('/signup', cors(corsOptions), (req, res) => {
-    res.send('The server has received your request.')
-})
-
-app.listen(process.env.PORT, () => {
-    console.log(`Express API server listening on http:localhost:${process.env.PORT}`)
-})
+app.listen(process.env.PORT, process.env.HOST, () => {
+    console.log(`Express API server listening on http//${process.env.HOST}:${process.env.PORT}`)
+});
