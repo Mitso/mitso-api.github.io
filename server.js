@@ -2,7 +2,11 @@ const express = require('express'),
     cors = require('cors'),
     bodyParser = require('body-parser');
 
+const { createClient } = require('@supabase/supabase-js')
 const { db } = require('./api/db');
+
+// Create a single supabase client for interacting with your database
+const supabase = createClient(process.env.ENDPOINT, process.env.PUBLIC)
 
 const app = express();
 
@@ -17,13 +21,25 @@ app.options('*', cors(corsOptions));
 
 //EXPRESSJS ROUTE HANDLERS
 app.get('/', async (req, res) => {
-    await db.query('SELECT $1:name FROM $2:name', ['*', 'generic'])
-        .then((data) => {
-            res.json(data);
-        })
-        .catch((error) => {
-            console.log('ERROR:', error)
-        })
+    const getData = await supabase 
+        .from('generic')
+        .select('*')
+        .then(({ data, error }) => {
+            if (error) throw error;
+            return data;
+        });
+    console.log('Prod server data:', getData);
+  
+    // await db.query('SELECT $1:name FROM $2:name', ['*', 'generic'])
+    //     .then((data) => {
+    //         console.log('Local server data:', data);
+    //         res.json({
+    //             msg: 'Testing'
+    //         });
+    //     })
+    //     .catch((error) => {
+    //         console.log('ERROR:', error)
+    //     })  
 });
 
 

@@ -16,6 +16,11 @@
 
 [Express API - Access form fields ](https://stackoverflow.com/questions/5710358/how-to-access-post-form-fields-in-express)
 
+### Node DB APIs:
+- [node-postgres](https://github.com/brianc/node-postgres)
+- [pg-promise](https://github.com/vitaly-t/pg-promise)
+- [postgres](/https://github.com/porsager/postgres)
+
 ### Other resources
 [Random User API ](https://randomuser.me/api/?results=50&seed=somethingfun)
 
