@@ -30,6 +30,22 @@ app.get('/', async (req, res) => {
     });
 });
 
+app.post('/signup', async (req, res) => {
+    const data = req.body
+    const {error } = await supabase
+    .from('users')
+    .insert({ 
+        first_name: data.name,
+        last_name: data.surname,
+        mobile: data.phone,
+        email: data.email_address,
+        username: data.username,
+        password: data.password
+    });
+    if (error) throw error;
+});
+
+
 /*
     Error handling middleware
         https://github.com/expressjs/express/blob/master/examples/web-service/index.js
