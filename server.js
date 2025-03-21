@@ -21,25 +21,15 @@ app.options('*', cors(corsOptions));
 
 //EXPRESSJS ROUTE HANDLERS
 app.get('/', async (req, res) => {
-    const getData = await supabase 
-        .from('generic')
-        .select('*')
-        .then(({ data, error }) => {
-            if (error) throw error;
-            return data;
-        });
-    console.log('Prod server data:', getData);
-  
-    // await db.query('SELECT $1:name FROM $2:name', ['*', 'generic'])
-    //     .then((data) => {
-    //         console.log('Local server data:', data);
-    //         res.json({
-    //             msg: 'Testing'
-    //         });
-    //     })
-    //     .catch((error) => {
-    //         console.log('ERROR:', error)
-    //     })  
+    await supabase
+    .from("generic")
+    .select('*')
+    .then(({ data, error }) => {
+        if (error) throw error;
+        res.json(data);
+    }).catch((error) => {
+        console.log('ERROR:', error)
+    });
 });
 
 
