@@ -2,11 +2,9 @@ const express = require('express'),
     cors = require('cors'),
     bodyParser = require('body-parser');
 
-const { createClient } = require('@supabase/supabase-js')
-const { db } = require('./api/db');
-
+const { createClient } = require('@supabase/supabase-js');
 // Create a single supabase client for interacting with your database
-const supabase = createClient(process.env.ENDPOINT, process.env.PUBLIC)
+const supabase = createClient(process.env.ENDPOINT, process.env.PUBLIC);
 
 const app = express();
 
@@ -31,7 +29,6 @@ app.get('/', async (req, res) => {
         console.log('ERROR:', error)
     });
 });
-
 
 /*
     Error handling middleware
