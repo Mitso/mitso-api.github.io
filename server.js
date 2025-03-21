@@ -2,6 +2,8 @@ const express = require('express'),
     cors = require('cors'),
     bodyParser = require('body-parser');
 
+const { hashPassword, verifyPassword } = require( './utils/salt');
+
 const { createClient } = require('@supabase/supabase-js');
 // Create a single supabase client for interacting with your database
 const supabase = createClient(process.env.ENDPOINT, process.env.PUBLIC);
@@ -31,7 +33,14 @@ app.get('/', async (req, res) => {
 });
 
 app.post('/signup', async (req, res) => {
-    const data = req.body
+    const data = req.body;
+    const hashedPassword = await hashPassword(data.password);
+    //TO REVIEW 
+    const isPasswordMatch = await verifyPassword(data.password, hashedPassword);
+    if (!isPasswordMatch) {
+        throw new Error('Passwords do not match');
+    }
+   
     const {error } = await supabase
     .from('users')
     .insert({ 
@@ -40,9 +49,13 @@ app.post('/signup', async (req, res) => {
         mobile: data.phone,
         email: data.email_address,
         username: data.username,
-        password: data.password
+        password: hashedPassword
     });
-    if (error) throw error;
+    res.status(201).json({ message: 'User registered successfully' });
+
+   if (error) {
+        res.status(500).json({ error: error.message });
+    }
 });
 
 
