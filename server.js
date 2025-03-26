@@ -1,10 +1,8 @@
 const express = require('express'),
     cors = require('cors'),
     bodyParser = require('body-parser');
-
-const { hashPassword, verifyPassword } = require( './utils/salt');
-
 const { createClient } = require('@supabase/supabase-js');
+const { hashPassword, verifyPassword } = require( './utils/salt');
 // Create a single supabase client for interacting with your database
 const supabase = createClient(process.env.ENDPOINT, process.env.PUBLIC);
 
@@ -17,6 +15,21 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 app.options('*', cors(corsOptions));
+
+
+const passwordSalt = async (password) => {
+    const hashedPassword = await hashPassword(password);
+    const isPasswordMatch = await verifyPassword(password, hashedPassword);
+    if (!isPasswordMatch) {
+        throw new Error('Passwords do not match');
+    }
+    return {
+        match: isPasswordMatch, 
+        pass: hashedPassword
+    }
+}
+
+
 
 
 //EXPRESSJS ROUTE HANDLERS
@@ -33,29 +46,66 @@ app.get('/', async (req, res) => {
 });
 
 app.post('/signup', async (req, res) => {
-    const data = req.body;
-    const hashedPassword = await hashPassword(data.password);
-    //TO REVIEW 
-    const isPasswordMatch = await verifyPassword(data.password, hashedPassword);
-    if (!isPasswordMatch) {
-        throw new Error('Passwords do not match');
-    }
-   
-    const {error } = await supabase
-    .from('users')
-    .insert({ 
-        first_name: data.name,
-        last_name: data.surname,
-        mobile: data.phone,
-        email: data.email_address,
-        username: data.username,
-        password: hashedPassword
-    });
-    res.status(201).json({ message: 'User registered successfully' });
+    const bodyData = req.body;
+    const hashes = await passwordSalt(bodyData.password);
+    const user = {
+        first_name: bodyData.name,
+        last_name: bodyData.surname,
+        mobile: bodyData.phone,
+        email: bodyData.email_address,
+        username: bodyData.username,
+        password: hashes.pass
+    };
+    let err, status;
+    
+    if(hashes.match) {
+        const { data, error } = await supabase.auth.signUp(user);
+        if (error) {
+            err = error; 
+            return;
+        }
+      
+        if (data.user.aud) {
+            const { error } = await supabase
+            .from('users')
+            .insert(user);
 
-   if (error) {
-        res.status(500).json({ error: error.message });
+            if (error) {
+                err = error
+                return;
+            } 
+            status = 'Success';
+        }
+        res.status(201).json({ user: data });
+    } else {
+        err = new Error('Sorry, something went wrong.')
     }
+
+    if (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+app.post('/login', async (req, res) => {
+    const bodyData = req.body;
+    console.log('Loggin user:', bodyData);
+
+    const hashes = await passwordSalt(bodyData.password);
+    let err;
+    if(hashes.match) {
+        const { data, error } = await supabase.auth.signInWithPassword({ 
+            username: bodyData.username,
+            password: hashes.pass
+        });
+        err = error;
+        console.log('Auth data:', data);
+    } else {
+        throw new Error('Sorry, something went wrong.')
+    }
+    if (err) {
+        res.status(500).json({ error: err.message });
+    }
+
 });
 
 
