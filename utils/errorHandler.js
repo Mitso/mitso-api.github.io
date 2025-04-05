@@ -1,4 +1,4 @@
-export function errorHandler(status, msg) {
+module.exports = function errorHandler(status, msg) {
     const err = new Error(msg);
     err.status = status;
     return err;
