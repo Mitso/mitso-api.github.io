@@ -6,13 +6,16 @@ const { saltPassword } = require('./utils/saltPassword');
 
 const { createSSRClient } = require('./lib/supabase-ssr');
 const supabase = require('./lib/supabase');
-const printName  = require('./lib/test');
+const postsData = require('./data/posts');
 
 const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }))
 const corsOptions = {
+    origin: '*',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    preflightContinue: true,
     optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 };
 app.use(cors(corsOptions));
@@ -21,7 +24,6 @@ app.options('*', cors(corsOptions));
 
 //EXPRESSJS ROUTE HANDLERS
 app.get('/', async (req, res) => {
-    console.log('Node module loader:', printName);
     //supabase.auth.onAuthStateChange((event, session) => {
     //     console.log('\tAuth change: Event::', event)
     //     console.log('\tAuth change: Session::', session)
@@ -36,14 +38,11 @@ app.get('/', async (req, res) => {
     // const fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
     // console.log('URL', fullUrl);
 
-    const results = {
-        msg: 'Molweni sizwe'
-    }
-    res.send(results);
+    res.json(postsData);
 });
 app.post('/signup', async (req, res) => {
     const bodyData = req.body;
-    const hashes = await saltPassword(bodyData.password);
+    //const hashes = await saltPassword(bodyData.password);
     const user = {
         first_name: bodyData.name,
         last_name: bodyData.surname,
@@ -51,7 +50,7 @@ app.post('/signup', async (req, res) => {
         phone: bodyData.mobile,
         email: bodyData.email_address,
         username: bodyData.username,
-        password: hashes.pass
+        password: bodyData.password
     };
     let err;
     try {
